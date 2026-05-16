@@ -6,6 +6,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { config } from './config/config.js';
 import productRouter from './routes/product.route.js';
 import morgan from 'morgan';
+import cartRouter from './routes/cart.route.js';
 export const app = express();
 
 app.use(morgan("dev"))
@@ -25,3 +26,4 @@ passport.use(new GoogleStrategy({
 //  @ prefix route for Auth
 app.use('/api/auth',authRouter)
 app.use("/api/products",productRouter)
+app.use("/api/cart",cartRouter)
