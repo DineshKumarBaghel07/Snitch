@@ -29,6 +29,10 @@ if(!process.env.NODE_ENV){
 if(!process.env.IMAGEKIT_PRIVATE_KEY){
     throw new Error("ImageKit api not define.")
 }
+
+if(!process.env.BASE_URL){
+    throw new Error("Base url not Found")
+}
 export const config ={
     port:process.env.PORT,
     mongo_uri:process.env.MONGO_URI,
@@ -36,5 +40,6 @@ export const config ={
     GOOGLE_CLIENT_ID :process.env.GOOGLE_CLIENT_ID,
     GOOGLE_SECERT:process.env.GOOGLE_SECERT,
     IMAGEKIT_PRIVATE_KEY:process.env.IMAGEKIT_PRIVATE_KEY,
-    NODE_ENV:process.env.NODE_ENV || development
+    NODE_ENV:process.env.NODE_ENV || development,
+    BASE_URL:process.env.BASE_URL 
 }

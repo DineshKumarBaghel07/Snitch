@@ -7,8 +7,15 @@ import { config } from './config/config.js';
 import productRouter from './routes/product.route.js';
 import morgan from 'morgan';
 import cartRouter from './routes/cart.route.js'
+import cors from "cors"
 export const app = express();
 
+
+
+app.use(cors({
+    origin:config.BASE_URL || "http://localhost:5173",
+    credentials:true,
+}))
 app.use(morgan("dev"))
  app.use(express.json());
  app.use(express.urlencoded({extended:true}));
