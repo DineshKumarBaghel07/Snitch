@@ -24,7 +24,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "https://snitch-y66g.onrender.com/api/auth/google";
+    window.location.href = "https://snitch-yi0u.onrender.com/api/auth/google";
     navigator(to="/")
   };
 
