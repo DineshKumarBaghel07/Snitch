@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useProducts } from '../hooks/useProducts';
+import { useProduct } from '../hooks/useProduct';
 import { useParams } from 'react-router';
 
 // Helper icons
@@ -24,7 +24,7 @@ const SellerProductDetails = () => {
   });
 
   const { productId } = useParams();
-  const { handleGetProductById, handleAddProductVariant } = useProducts();
+  const { handleGetProductById, handleAddProductVariant } = useProduct();
 
   async function fetchProductDetails() {
     setLoading(true);

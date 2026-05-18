@@ -1,4 +1,4 @@
-import { login, register, getMe } from "../services/auth.api.js"
+import { login, register, getMe ,logout} from "../services/auth.api.js"
 import { setError, setLoading, setUser } from "../state/auth.slice.js"
 import { useDispatch } from "react-redux"
 
@@ -49,7 +49,21 @@ export const useAuth = () => {
          dispatch(setLoading(false))
       }
    }
-   return { handleLogin, handleRegister, handleGetMe }
+
+   const handleLogout = async () => {
+      try{
+         dispatch(setLoading(true));
+         const data = await logout();
+         dispatch(setUser(null))
+      }
+      catch(err){
+         dispatch(setError(err.message || "Logout Failed"))
+      }
+      finally{
+         dispacth(setLoading(false))
+      }
+   }
+   return { handleLogin, handleRegister, handleGetMe, handleLogout}
 
 
 }

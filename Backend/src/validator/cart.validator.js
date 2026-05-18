@@ -9,15 +9,18 @@ const validateResult = (req, res, next) => {
               success: false
              })
     }
+    next()
 }
 
-const validateAddToCart = [
+export const validateAddToCart = [
      body("quantity").isNumeric().withMessage("quantity must be a number"),
-     param("proudctId").isMongoId().withMessage("Invalid product id:"),
-     param("variantId").isMongoId().withMessage("invalid variant id:"),
+     param("productId").isMongoId().withMessage("Invalid product id"),
+     param("variantId").isMongoId().withMessage("invalid variant id"),
      validateResult
 ]
 
-
-
-export default validateAddToCart;
+export const validateIncrementCartItemQuantity = [
+    param("productId").isMongoId().withMessage("Invalid product ID"),
+    param("variantId").optional().isMongoId().withMessage("Invalid variant ID"),
+    validateResult
+]

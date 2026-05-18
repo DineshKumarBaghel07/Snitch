@@ -4,7 +4,7 @@ import { setSellerProducts, setProducts } from "../state/product.slice.js"
 
 
 
-export const useProducts = () => {
+export const useProduct = () => {
 
     const dispatch = useDispatch()
 
@@ -22,6 +22,7 @@ export const useProducts = () => {
     async function handleGetAllProducts() {
 
         const data = await getAllProducts()
+        console.log(data.products)
         dispatch(setProducts(data.products))
     }
 

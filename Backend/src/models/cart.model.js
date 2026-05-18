@@ -12,7 +12,7 @@ const carrtSchema = new mongoose.Schema({
         {
             product:{
                 type: mongoose.Schema.Types.ObjectId,
-                ref:"products",
+                ref:"product",
                 required:true
             },
             quantity:{
@@ -27,7 +27,6 @@ const carrtSchema = new mongoose.Schema({
             },
             variant:{
                 type:mongoose.Schema.Types.ObjectId,
-                ref:"variants",
                 required:true
             }
         }

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { useProducts } from '../hooks/useProducts';
+import { useProduct } from '../hooks/useProduct';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 const Dashboard = () => {
-    const { handleGetSellerProduct } = useProducts();
+    const { handleGetSellerProduct } = useProduct();
     const sellerProducts = useSelector(state => state.product.sellerProducts);
     const navigate = useNavigate();
     console.log(sellerProducts);

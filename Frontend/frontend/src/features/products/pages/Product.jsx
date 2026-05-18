@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useProducts } from '../hooks/useProducts';
+import { useProduct } from '../hooks/useProduct';
 import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
 
 const Product = () => {
     const products = useSelector(state => state.product.products);
     const user = useSelector(state => state.auth.user);
-    const { handleGetAllProducts } = useProducts();
+    const { handleGetAllProducts } = useProduct();
 
+    console.log(products)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,7 +28,7 @@ const Product = () => {
                 className="min-h-screen selection:bg-[#C9A96E]/30"
                 style={{ backgroundColor: '#fbf9f6', fontFamily: "'Inter', sans-serif" }}
             >
-               
+
 
                 <div className="max-w-7xl mx-auto px-8 lg:px-16 xl:px-24">
                     {/* ── Hero / Header ── */}
@@ -50,9 +51,10 @@ const Product = () => {
                     {products && products.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16 pb-32">
                             {products.map(product => {
-                                const imageUrl = product.images && product.images.length > 0
-                                    ? product.images[ 0 ].url
-                                    : '/snitch_editorial_warm.png'; // Fallback
+                                const imageUrl =
+                                    product?.variants?.[0]?.images?.[0]?.url ||
+                                    '/snitch_editorial_warm.png';
+
 
                                 return (
                                     <div
@@ -108,7 +110,7 @@ const Product = () => {
                     )}
                 </div>
 
-                
+
             </div>
         </>
     );

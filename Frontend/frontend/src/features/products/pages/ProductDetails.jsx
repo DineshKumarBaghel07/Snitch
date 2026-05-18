@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router';
-import { useProducts } from '../hooks/useProducts';
-
+import { useProduct } from '../hooks/useProduct';
+import { useCart } from '../../cart/hooks/useCart';
 
 const ProductDetail = () => {
     const { productId } = useParams();
@@ -9,8 +9,8 @@ const ProductDetail = () => {
     const [ selectedImage, setSelectedImage ] = useState(0);
     const [ selectedAttributes, setSelectedAttributes ] = useState({});
     const navigate = useNavigate();
-    const { handleGetProductById } = useProducts();
-    // const { handleAddItem } = useCart()
+    const { handleGetProductById } = useProduct();
+    const { handleAddItem } = useCart()
 
 
 
@@ -31,22 +31,30 @@ const ProductDetail = () => {
 
     useEffect(() => {
         if (product?.variants?.length > 0) {
+            console.log("check product variants", product.variant)
             setSelectedAttributes(product.variants[ 0 ].attributes || {});
         }
     }, [ product ]);
 
-    const activeVariant = useMemo(() => {
-        if (!product?.variants || product.variants.length === 0) return null;
-        return product.variants.find(v => {
+    const hasVariants = product?.variants?.length > 0;
+
+  const activeVariant = useMemo(() => {
+
+    if (!hasVariants) return null;
+
+    return (
+        product.variants.find(v => {
+
             if (!v.attributes) return false;
-            const vKeys = Object.keys(v.attributes);
-            const sKeys = Object.keys(selectedAttributes);
-            const isMatch = vKeys.every(k => v.attributes[ k ] === selectedAttributes[ k ]);
-            // If they don't have exactly the same keys, they shouldn't perfectly match, 
-            // but we might only care about matching what's available.
-            return vKeys.length === sKeys.length && isMatch;
-        });
-    }, [ product, selectedAttributes ]);
+
+            return Object.keys(selectedAttributes).every(
+                key => v.attributes[key] === selectedAttributes[key]
+            );
+
+        }) || product.variants[0]
+    );
+
+}, [product, selectedAttributes, hasVariants]);
 
 
     console.log({ product, activeVariant })
@@ -107,14 +115,17 @@ const ProductDetail = () => {
 
     console.log(product)
 
-    // Fallbacks
-    const displayImages = (activeVariant?.images && activeVariant.images.length > 0)
-        ? activeVariant.images
-        : (product.images && product.images.length > 0 ? product.images : [ { url: '/snitch_editorial_warm.png' } ]);
 
-    const displayPrice = activeVariant?.price?.amount
-        ? activeVariant.price
-        : product.price;
+    // Fallbacks
+    const displayImages =
+    activeVariant?.images?.length > 0
+        ? activeVariant.images
+        : product?.images?.length > 0
+            ? product.images
+            : [{ url: '/snitch_editorial_warm.png' }];
+
+  const displayPrice =
+    activeVariant?.price || product?.price;
 
     return (
         <>
@@ -210,7 +221,7 @@ const ProductDetail = () => {
                             <div className="h-px w-full mb-8" style={{ backgroundColor: '#e4e2df' }} />
 
                             {/* Options/Variants */}
-                            {Object.entries(availableAttributes).map(([ attrName, values ]) => (
+                            {hasVariants && Object.entries(availableAttributes).map(([attrName, values])  => (
                                 <div key={attrName} className="mb-6">
                                     <h3 className="text-[10px] uppercase tracking-[0.24em] font-medium mb-3" style={{ color: '#C9A96E' }}>
                                         {attrName}
@@ -271,7 +282,7 @@ const ProductDetail = () => {
                                     onClick={() => {
                                         handleAddItem({
                                             productId: product._id,
-                                            variantId: activeVariant._id
+                                            variantId: activeVariant?._id
                                         })
                                     }}
                                 >

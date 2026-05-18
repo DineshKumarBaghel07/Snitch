@@ -1,12 +1,12 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router';
-import { useProducts } from '../hooks/useProducts';
+import { useProduct } from '../hooks/useProduct';
 
 const CURRENCIES = ['INR', 'USD', 'EUR', 'GBP'];
 const MAX_IMAGES = 7;
 
 const CreateProduct = () => {
-    const { handleCreateProduct } = useProducts();
+    const { handleCreateProduct } = useProduct();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -14,6 +14,9 @@ const CreateProduct = () => {
         description: '',
         priceAmount: '',
         currency: 'INR',
+        stock: '',
+        color: '',
+        size: ''
     });
     const [images, setImages] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
@@ -65,8 +68,18 @@ const CreateProduct = () => {
             data.append('description', formData.description);
             data.append('priceAmount', formData.priceAmount);
             data.append('currency', formData.currency);
+
+            data.append('stock', formData.stock);
+
+            data.append(
+                'attributes',
+                JSON.stringify({
+                    color: formData.color,
+                    size: formData.size
+                })
+            );
             images.forEach(img => data.append('images', img.file));
-            
+
             await handleCreateProduct(data);
             navigate('/');
         } catch (err) {
@@ -226,6 +239,77 @@ const CreateProduct = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            {/* Stock */}
+                            <div className="flex flex-col gap-2">
+                                <label
+                                    className="text-[10px] uppercase tracking-[0.2em] font-medium"
+                                    style={{ color: '#7A6E63' }}
+                                >
+                                    Stock
+                                </label>
+
+                                <input
+                                    type="number"
+                                    name="stock"
+                                    value={formData.stock}
+                                    onChange={handleChange}
+                                    placeholder="Available stock"
+                                    className={inputClass}
+                                    style={inputStyle}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                />
+                            </div>
+
+                            {/* Variant Attributes */}
+                            <div className="grid grid-cols-2 gap-5">
+
+                                {/* Color */}
+                                <div className="flex flex-col gap-2">
+                                    <label
+                                        className="text-[10px] uppercase tracking-[0.2em] font-medium"
+                                        style={{ color: '#7A6E63' }}
+                                    >
+                                        Color
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="color"
+                                        value={formData.color}
+                                        onChange={handleChange}
+                                        placeholder="Black"
+                                        className={inputClass}
+                                        style={inputStyle}
+                                        onFocus={handleFocus}
+                                        onBlur={handleBlur}
+                                    />
+                                </div>
+
+                                {/* Size */}
+                                <div className="flex flex-col gap-2">
+                                    <label
+                                        className="text-[10px] uppercase tracking-[0.2em] font-medium"
+                                        style={{ color: '#7A6E63' }}
+                                    >
+                                        Size
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="size"
+                                        value={formData.size}
+                                        onChange={handleChange}
+                                        placeholder="M"
+                                        className={inputClass}
+                                        style={inputStyle}
+                                        onFocus={handleFocus}
+                                        onBlur={handleBlur}
+                                    />
+                                </div>
+
                             </div>
 
                             {/* ── RIGHT COLUMN: Images ── */}

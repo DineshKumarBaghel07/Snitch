@@ -7,30 +7,48 @@ import { uploadFile } from "../services/storage.service.js"
 
 export const handleCreateProduct = async (req, res) => {
   try {
-    const { title, description, priceAmount, currency } = req.body;
+
+    const {
+      title,
+      description,
+      priceAmount,
+      currency,
+      stock,
+      attributes
+    } = req.body;
+
     const seller = req.user;
 
-    console.log("check controller level");
-     console.log(req.files)
-     
-  
-  const images = await Promise.all(req.files.map(async (file) => {
+    const uploadedImages = await Promise.all(
+      req.files.map(async (file) => {
         return await uploadFile({
-            buffer: file.buffer,
-            fileName: file.originalname
-        })
-    }))
+          buffer: file.buffer,
+          fileName: file.originalname
+        });
+      })
+    );
 
+    const parsedAttributes = JSON.parse(attributes || "{}");
 
     const product = await productModel.create({
       title,
       description,
-      price: {
-        amount: priceAmount,
-        currency
-      },
       seller: seller._id,
-      images: images
+
+      variants: [
+        {
+          images: uploadedImages,
+
+          stock: stock || 0,
+
+          attributes: parsedAttributes,
+
+          price: {
+            amount: priceAmount,
+            currency: currency || "INR"
+          }
+        }
+      ]
     });
 
     return res.status(201).json({
@@ -45,6 +63,7 @@ export const handleCreateProduct = async (req, res) => {
       message: error.message,
       success: false
     });
+
   }
 };
 
@@ -97,7 +116,7 @@ export const handleGetProductDetails = async (req,res) => {
       return res.status(404).json({message:"Id not Define",success:false})
     }
 
-    const product = await productModel.findById({_id:id})
+    const product = await productModel.findById(id)
     if(!product){
       return res.status(404).json({message:"product not Found.",success:false})
     }
@@ -121,7 +140,7 @@ export const handleAddProductVariant = async(req,res) => {
   }
   const files = req.files;
   const images =[];
-  if(files && files.length >0){
+  if(files && files.length !==0){
      (await Promise.all(files.map(async(file)=>{
       const image = await uploadFile({
         buffer: file.buffer,
@@ -150,7 +169,8 @@ export const handleAddProductVariant = async(req,res) => {
 
   return res.status(200).json({
     message:"variants successfully added",
-    success:true
+    success:true,
+    product
   })
   
 }
