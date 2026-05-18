@@ -32,7 +32,7 @@ const Register = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5173/api/auth/google";
+    window.location.href = "https://snitch-y66g.onrender.com/api/auth/google";
   };
 
   return (
